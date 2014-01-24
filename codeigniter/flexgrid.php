@@ -18,6 +18,12 @@ define('FLEXGRID_SEARCH_QUERY', 'query');
 define('FLEXGRID_LIMIT_PAGE', 'page');
 define('FLEXGRID_LIMIT_ROWS', 'rp');
 
+define('FLEXGRID_RETURN_PAGE', 'page');
+define('FLEXGRID_RETURN_ROWS', 'rows');
+define('FLEXGRID_RETURN_TOTAL', 'total');
+define('FLEXGRID_RETURN_ID', 'id');
+define('FLEXGRID_RETURN_CELL', 'cell');
+
 
 /* Don't change this */
 $config = array();
