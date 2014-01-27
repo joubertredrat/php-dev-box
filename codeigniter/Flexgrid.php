@@ -232,8 +232,9 @@ class Flexgrid
      * @return void
      */
     public function return_json() {
+        $data = $this->get_data();
         header('Content-type: application/json');
-        exit(json_encode($this->data));
+        exit(json_encode($data));
     }
 
     /**
