@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Classe com funções de uso geral para as aplicações e sistemas.
  *
@@ -56,17 +56,17 @@ class Funcoes
 		for($i = 0; $i < $length; $i++)
 		{
 			$c = ord($texto[$i]);
-			if ($c < 0x80) 
+			if ($c < 0x80)
 				$n = 0; # 0bbbbbbb
-			elseif (($c & 0xE0) == 0xC0) 
+			elseif (($c & 0xE0) == 0xC0)
 				$n = 1; # 110bbbbb
-			elseif (($c & 0xF0) == 0xE0) 
+			elseif (($c & 0xF0) == 0xE0)
 				$n = 2; # 1110bbbb
-			elseif (($c & 0xF8) == 0xF0) 
+			elseif (($c & 0xF8) == 0xF0)
 				$n = 3; # 11110bbb
-			elseif (($c & 0xFC) == 0xF8) 
+			elseif (($c & 0xFC) == 0xF8)
 				$n = 4; # 111110bb
-			elseif (($c & 0xFE) == 0xFC) 
+			elseif (($c & 0xFE) == 0xFC)
 				$n = 5; # 1111110b
 			else
 				return false; # Does not match any model
@@ -220,7 +220,7 @@ class Funcoes
 	 * @return string|bool Retorna id ou false.
 	 * @see http://stackoverflow.com/questions/11438544/php-regex-for-youtube-video-id
 	 */
-	function validarLinkYoutube($url) 
+	function validarLinkYoutube($url)
 	{
 		$regex = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
 		preg_match($regex, $url, $pedacos);
@@ -229,7 +229,7 @@ class Funcoes
 
 	/**
 	 * Faz um dump da variável na tela usando as cores padrão do PHP.
-	 * 
+	 *
 	 * @param mixed $var Variável a ser dumpada.
 	 * @return void
 	 */
@@ -247,7 +247,7 @@ class Funcoes
 	}
 
 	/**
-	 * A função number_format() é boa. Mas, no sistema em q estava desenvolvendo, percebi q caso o usuário "fuja" dos padrões 
+	 * A função number_format() é boa. Mas, no sistema em q estava desenvolvendo, percebi q caso o usuário "fuja" dos padrões
 	 * (999.999,99 ou 9999.99 e variantes), a função retorna um erro ou "deixa passar" o valor q o usuário inseriu.
 	 *
 	 * echo formatoReal('9'); //false
@@ -273,4 +273,139 @@ class Funcoes
 		$regra = "/^[0-9]{1,3}([.]([0-9]{3}))*[,]([.]{0})[0-9]{0,2}$/";
 		return preg_match($regra, $valor);
 	}
+
+        /**
+         * Extrai somente números da string.
+         *
+         * @param string $str
+         * @return string
+         */
+        public static function get_number($str) {
+                return preg_replace("/[^0-9]/", "", $str);
+        }
+
+        /**
+         * Remove mascara de telefone.
+         * @param string $str
+         * @return string
+         */
+        public static function tel_to_int($str) {
+                return self::get_number($str);
+        }
+
+        /**
+         * Aplica mascara de telefone.
+         * @param string $str
+         * @return string
+         */
+        public static function int_to_tel($str) {
+                switch (strlen($str)) {
+                        case 8:
+                                return substr($str, 0, 4) . '-' . substr($str, 4);
+                                break;
+                        case 9:
+                                return substr($str, 0, 5) . '-' . substr($str, 5);
+                                break;
+                        default:
+                                return $str;
+                                break;
+                }
+        }
+
+        /**
+         * Remove máscara de CEP.
+         *
+         * @param string $str
+         * @return string
+         */
+        public static function cep_to_int($str) {
+                return self::get_number($str);
+        }
+
+        /**
+         * Aplica máscara de CEP.
+         *
+         * @param string $str
+         * @return string
+         */
+	public static function int_to_cep($str) {
+		return substr($str, 0, 5) . '-' . substr($str, 5);
+	}
+
+        /**
+         * Remove máscara de CPF.
+         *
+         * @param string $str
+         * @return string
+         */
+	public static function cpf_to_int($str) {
+		return self::get_number($str);
+	}
+
+        /**
+         * Aplica máscara de CPF.
+         *
+         * @param string $str
+         * @return string
+         */
+	public static function int_to_cpf($str) {
+		return substr($str, 0, 3) . '.' . substr($str, 3, 3) . '.' . substr($str, 6, 3) . '-' . substr($str, 9, 2);
+	}
+
+        /**
+         * Remove máscara de CNPJ.
+         *
+         * @param string $str
+         * @return string
+         */
+	public static function cnpj_to_int($str) {
+		return self::get_number($str);
+	}
+
+        /**
+         * Aplica máscara de CNPJ.
+         *
+         * @param string $str
+         * @return string
+         */
+	public static function int_to_cnpj($str) {
+		return substr($str, 0, 2) . '.' . substr($str, 2, 3) . '.' . substr($str, 5, 3) . '/' . substr($str, 8, 4) . '-' . substr($str, 12, 2);
+	}
+
+        public static function convert_date($data, $mascara = 'Y-m-d') {
+            if (is_null($data) || $data == '')
+                return null;
+            return date($mascara, strtotime(str_replace('/', '-', $data)));
+        }
+
+        /**
+         * Provides a return data in json format.
+         * @param array|text $data Data to be returned.
+         */
+        public static function return_json($data) {
+            header('Content-type: application/json');
+            exit(json_encode($data));
+        }
+
+        /**
+         * Erm, I don't know :(
+         *
+         * @param type $name
+         * @param type $arguments
+         * @return type
+         */
+        public static function __callStatic($name, $arguments) {
+            switch ($name) {
+                case 'forge_url':
+                    if(substr($arguments[0], strlen($arguments[0]) - 1) === '/')
+                        $arguments[0] = substr($arguments[0], 0, strlen($arguments[0]) - 1);
+                    return implode('/', $arguments);
+                    break;
+                default:
+                    exit(__CLASS__." class said: I don't know this method. ".__FILE__.':'.__LINE__);
+                    break;
+            }
+        }
 }
+
+class Functions extends Funcoes {}
