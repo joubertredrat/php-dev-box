@@ -153,7 +153,7 @@ class Funcoes
 	 */
 	public static function validaEmail($email)
 	{
-		return (bool) preg_match('/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/', $email);
+		return (bool) preg_match('/^[a-z0-9]+([+]?[a-z0-9\._-]{1,}|[a-z0-9\._-]{0,})+[@][a-z0-9_-]+(\.[a-z0-9]+)*\.[a-z]{2,3}$/', $email);
 	}
 
 	/**
