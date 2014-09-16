@@ -406,6 +406,12 @@ class Funcoes
                     break;
             }
         }
+        
+	function is_online($link) {
+		$file_headers = @get_headers($link);
+		preg_match('|HTTP/\d\.\d\s+(\d+)\s+.*|', $file_headers[0], $match);
+		return $match[1] == '200';
+	}
 }
 
 class Functions extends Funcoes {}
