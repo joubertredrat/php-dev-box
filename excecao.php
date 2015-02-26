@@ -16,7 +16,21 @@ class Excecao extends Exception {
      */
     public function __construct($msg) {
         if(defined('SISTEMA_ERRO_EMAIL') && Funcoes::validaProvedorEmail(SISTEMA_ERRO_EMAIL))
-            mail(SISTEMA_ERRO_EMAIL, 'Exeção disparada em ' . time(), $msg);
+        {
+            $cabecalho = 'From: '.SISTEMA_ERRO_EMAIL."\r\n".'X-Mailer: PHP/'.phpversion();
+            $cabecalho .= 'MIME-Version: 1.0' . "\r\n";
+            $cabecalho .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+
+            $msg .= "\r\n";
+            $msg .= 'Dados do ambiente:'."\r\n<pre>";
+            $msg .= '$_SERVER = '.var_export($_SERVER, true)."\r\n";
+            $msg .= '$_POST = '.var_export($_POST, true)."\r\n";
+            $msg .= '$_GET = '.var_export($_GET, true)."\r\n";
+            $msg .= '$_REQUEST = '.var_export($_REQUEST, true)."\r\n";
+            $msg .= '$_COOKIE = '.var_export($_COOKIE, true)."</pre>\r\n";
+            
+            mail(SISTEMA_ERRO_EMAIL, 'Exceção disparada em ' . time(), $msg, $cabecalho);
+        }
         parent::__construct($msg);
     }
 
